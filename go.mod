@@ -1,4 +1,4 @@
-module keytest
+module github.com/luastan/keytest
 
 go 1.17
 
