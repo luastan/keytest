@@ -1,7 +1,7 @@
 package apiKeys
 
 import (
-	"keytest/keys"
+	"github.com/luastan/keytest/keys"
 	"regexp"
 )
 

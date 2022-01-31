@@ -1,7 +1,7 @@
 package keys
 
 import (
-	"keytest/logger"
+	"github.com/luastan/keytest/logger"
 	"sync"
 )
 

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"keytest/cmd"
+	"github.com/luastan/keytest/cmd"
 )
 
 func main() {

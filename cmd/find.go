@@ -1,8 +1,8 @@
 package cmd
 
 import (
+	"github.com/luastan/keytest/keys"
 	"github.com/spf13/cobra"
-	"keytest/keys"
 	"sync"
 )
 

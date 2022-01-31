@@ -2,8 +2,8 @@ package keys
 
 import (
 	"fmt"
+	"github.com/luastan/keytest/logger"
 	"io"
-	"keytest/logger"
 	"os"
 	"sync"
 	"text/template"

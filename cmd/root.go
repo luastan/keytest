@@ -2,10 +2,10 @@ package cmd
 
 import (
 	"crypto/tls"
+	"github.com/luastan/keytest/apiKeys"
+	"github.com/luastan/keytest/kt"
+	"github.com/luastan/keytest/logger"
 	"github.com/spf13/cobra"
-	"keytest/apiKeys"
-	"keytest/kt"
-	"keytest/logger"
 	"net/http"
 	"net/url"
 	"os"

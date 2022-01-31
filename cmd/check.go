@@ -1,9 +1,9 @@
 package cmd
 
 import (
+	"github.com/luastan/keytest/keys"
+	"github.com/luastan/keytest/logger"
 	"github.com/spf13/cobra"
-	"keytest/keys"
-	"keytest/logger"
 	"os"
 	"sync"
 )

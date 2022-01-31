@@ -1,9 +1,9 @@
 package keys
 
 import (
+	"github.com/luastan/keytest/kt"
+	"github.com/luastan/keytest/logger"
 	"io"
-	"keytest/kt"
-	"keytest/logger"
 	"regexp"
 	"sync"
 )

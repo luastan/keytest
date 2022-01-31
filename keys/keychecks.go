@@ -2,8 +2,8 @@ package keys
 
 import (
 	"bytes"
+	"github.com/luastan/keytest/kt"
 	"io/ioutil"
-	"keytest/kt"
 	"net/http"
 	"net/url"
 	"strings"
