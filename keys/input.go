@@ -51,7 +51,7 @@ func ReadersToLines(inputHandles <-chan InputHandle) <-chan *Line {
 				sc := bufio.NewScanner(handle.Reader)
 				sc.Buffer(make([]byte, BuffSize), BuffSize)
 				sc.Split(bufio.ScanLines)
-				for i := 0; sc.Scan(); i++ {
+				for i := 1; sc.Scan(); i++ {
 					ch <- &Line{Location: &Location{File: handle.File, Line: i}, Content: sc.Text()}
 				}
 			}(handle)
