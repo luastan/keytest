@@ -41,7 +41,7 @@ const consoleVulnerableTemplate = `[+] {{ .FoundAPIKey.KeyType.Name }} - {{ .Fou
 
 const markdownVulnerablesTemplate = `{{ range . }}{{ $fk := .FoundAPIKey }}
 - **{{ $fk.KeyType.Name }}**
-  - ` + "```{{ $fk.Key }}```" + `
+  - ` + "_{{ $fk.Key }}_" + `
   - **Location:** {{ $fk.Location.File }} (line {{ $fk.Location.Line }})
 
 {{ range $endpoint := .VulnerableEndpoints }}
