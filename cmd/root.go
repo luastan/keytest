@@ -13,7 +13,7 @@ import (
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "kt",
+	Use:   "keytest",
 	Short: "Find and test API keys",
 	Long: `Keytest will first help you finding API keys on static files (perfect for
 mobile app analysis) and from HTTP traffic acting as a proxy.
