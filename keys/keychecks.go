@@ -191,3 +191,23 @@ func (check PostContainsError) IsVulnerable(key FoundAPIKey, endpoint KeyEndpoin
 
 	return !strings.Contains(rawBody, check.ErrorString), nil
 }
+
+/*
+
+	Very custom stuff
+
+*/
+
+type CustomRequestCheck struct {
+	Data         map[string]interface{}
+	PocFactory   func(c CustomRequestCheck, key FoundAPIKey, endpoint KeyEndpoint) (string, error)
+	CheckFactory func(c CustomRequestCheck, key FoundAPIKey, endpoint KeyEndpoint) (bool, error)
+}
+
+func (c CustomRequestCheck) Poc(key FoundAPIKey, endpoint KeyEndpoint) (string, error) {
+	return c.PocFactory(c, key, endpoint)
+}
+
+func (c CustomRequestCheck) IsVulnerable(key FoundAPIKey, endpoint KeyEndpoint) (bool, error) {
+	return c.CheckFactory(c, key, endpoint)
+}
