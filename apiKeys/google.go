@@ -1,8 +1,12 @@
 package apiKeys
 
 import (
+	"fmt"
 	"github.com/luastan/keytest/keys"
+	"github.com/luastan/keytest/kt"
+	"net/http"
 	"regexp"
+	"strings"
 )
 
 func AddGoogleKeys() {
@@ -10,12 +14,70 @@ func AddGoogleKeys() {
 }
 
 var (
+
+	// Defining it here since it can work with different keys
+	fcmKeyEndpoint = keys.KeyEndpoint{
+		// https://abss.me/posts/fcm-takeover/
+		Name:    "Firebase Cloud Messaging Service Takeover",
+		Pricing: "Free, but vulnerable to FCM Service Takeover",
+		Check: keys.CustomRequestCheck{
+			Data: map[string]interface{}{
+				"URL": "https://fcm.googleapis.com/fcm/send",
+			},
+			CheckFactory: func(c keys.CustomRequestCheck, key keys.FoundAPIKey, endpoint keys.KeyEndpoint) (bool, error) {
+				// Check is relatively simple. Issue a POST request with the
+				// key in the authorization header. A 200 OK response means the
+				// key is vulnerable.
+				req, err := http.NewRequest(
+					http.MethodPost,
+					c.Data["URL"].(string),
+					// Invalid registration_ids do translate into a 200 OK response.
+					// If the registration_id exists a notification could be sent,
+					// which would be a kinda destructive check, so is better to use
+					// something that is unlikely to exist
+					strings.NewReader("{\"registration_ids\":[\"XYZ\"]}"),
+				)
+				if err != nil {
+					return false, err
+				}
+				req.Header.Add("Authorization", fmt.Sprintf("key=%s", key.Key))
+				req.Header.Add("Content-Type", "application/json")
+				res, err := kt.Client.Do(req)
+				if err != nil {
+					return false, err
+				}
+				return res.StatusCode == http.StatusOK, nil
+			},
+			PocFactory: func(c keys.CustomRequestCheck, key keys.FoundAPIKey, endpoint keys.KeyEndpoint) (string, error) {
+				return fmt.Sprintf(`curl --header "Authorization: key=%s" \
+     --header Content-Type:"application/json" \
+     %s \
+     -d "{\"registration_ids\":[\"XYZ\"]}"`, key.Key, c.Data["URL"].(string)), nil
+			},
+		},
+	}
+
 	GoogleKeys = []keys.KeyType{
+		{
+			Name: "Firebase Cloud Messaging server Key",
+			Re:   regexp.MustCompile(`AAAA[A-Za-z0-9_-]{7}:[A-Za-z0-9_-]{140}`),
+			Help: "Can be used to send push notifications to users. More info at:\n - https://abss.me/posts/fcm-takeover/",
+			Endpoints: []keys.KeyEndpoint{
+
+				// Common Endpoints
+				fcmKeyEndpoint,
+			},
+		},
 		{
 			Name: "Google API Key",
 			Re:   regexp.MustCompile(`AIza[0-9A-Za-z-_]{35}`),
 			Help: "Google API keys. Multiple uses. More info at:\n - https://github.com/streaak/keyhacks#google-maps-api-key",
 			Endpoints: []keys.KeyEndpoint{
+
+				// Common Endpoints
+				fcmKeyEndpoint,
+
+				// _Specific to this key_ Endpoints
 				{
 					Name:    "Google Maps Custom Search API",
 					Pricing: "$5 per 1000 requests",
