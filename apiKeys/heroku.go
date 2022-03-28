@@ -43,6 +43,11 @@ var (
 
 							return res.StatusCode == http.StatusOK, nil
 						},
+						PocFactory: func(c keys.CustomRequestCheck, key keys.FoundAPIKey, endpoint keys.KeyEndpoint) (string, error) {
+							return fmt.Sprintf(`curl --header "Authorization: Bearer %s" \
+     --header "Accept: application/vnd.heroku+json; version=3" \
+     %s`, key.Key, c.Data["URL"].(string)), nil
+						},
 					},
 				},
 			},
