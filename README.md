@@ -57,3 +57,11 @@ With `go install`:
 ```shell
 go install github.com/luastan/keytest@latest
 ```
+
+## Update
+
+With `go install`:
+
+````shell
+go install -a github.com/luastan/keytest@latest
+````
