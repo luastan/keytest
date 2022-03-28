@@ -43,10 +43,10 @@ var (
 
 func init() {
 	// Workers
-	kt.Workers = rootCmd.Flags().IntP("workers", "w", 100, "Number workers to use (simultaneous files opened)")
+	kt.Workers = rootCmd.PersistentFlags().IntP("workers", "w", 100, "Number workers to use (simultaneous files opened)")
 
 	// Debug mode
-	kt.Debug = rootCmd.Flags().BoolP("debug", "d", false, "Asume the key is vulnerable to everything and print the results.")
+	kt.Debug = rootCmd.PersistentFlags().BoolP("test", "t", false, "Asume the key is vulnerable to everything and print the results.")
 
 	// Markdown output
 	markdownOutput = rootCmd.PersistentFlags().StringP("md", "o", "", "File to save the results in markdown")
