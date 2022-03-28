@@ -39,11 +39,21 @@ Use of a proxy is also possible through **HTTP** or **SOCKS5**:
 keytest check DIR --upstream-proxy socks5://127.0.0.1:2222
 ```
 
+### Other options
+
+In any mode you can specify the number of workers. The workers are goroutines, so you can specify relatively high values.
+The main concern is on some OSes, where the number of open file descriptors is capped (around 1024).
+So take in mind every worker will have 1 file descriptor open.
+Default value is `100`, but you can change it with the `--workers` option.
+
+````shell
+keytest check DIR --workers 200
+````
 
 ## Installation
 
-With `go get`:
+With `go install`:
 
 ```shell
-go get -u github.com/luastan/keytest
+go install github.com/luastan/keytest@latest
 ```
