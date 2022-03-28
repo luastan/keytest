@@ -82,7 +82,7 @@ func LogVulnerableKeys(wg *sync.WaitGroup, results <-chan KeyVulns) (<-chan KeyV
 	if err != nil {
 		return nil, err
 	}
-	ch := make(chan KeyVulns, 100)
+	ch := make(chan KeyVulns, 10)
 	wg.Add(1)
 	go func() {
 		defer wg.Done()

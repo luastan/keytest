@@ -4,6 +4,7 @@ import (
 	"github.com/luastan/keytest/kt"
 	"github.com/luastan/keytest/logger"
 	"io"
+	"os"
 	"regexp"
 	"sync"
 )
@@ -38,8 +39,9 @@ type FoundAPIKey struct {
 }
 
 type InputHandle struct {
-	File   string
-	Reader io.Reader
+	descriptor *os.File
+	File       string
+	Reader     io.Reader
 }
 
 type KeyCheck interface {
@@ -89,4 +91,13 @@ func (k FoundAPIKey) VulnerableEndpoints() ([]KeyEndpoint, error) {
 
 	wg.Wait()
 	return endpoints, nil
+}
+
+func (h InputHandle) close() {
+	if h.descriptor != nil {
+		err := h.descriptor.Close()
+		if err != nil {
+			logger.ErrorLogger.Println(err.Error())
+		}
+	}
 }

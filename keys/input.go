@@ -2,6 +2,7 @@ package keys
 
 import (
 	"bufio"
+	"github.com/luastan/keytest/logger"
 	"io/fs"
 	"os"
 	"path/filepath"
@@ -9,15 +10,18 @@ import (
 )
 
 const BuffSize = 512 * 1024
+const Workers = 100
 
 func PathsToInputHandles(paths <-chan string) <-chan InputHandle {
-	ch := make(chan InputHandle)
+	ch := make(chan InputHandle, 1)
 	go func() {
 		defer close(ch)
 		for path := range paths {
 			f, err := os.Open(path)
 			if err == nil {
-				ch <- InputHandle{File: path, Reader: bufio.NewReader(f)}
+				ch <- InputHandle{File: path, Reader: bufio.NewReader(f), descriptor: f}
+			} else {
+				logger.ErrorLogger.Println(err.Error())
 			}
 		}
 	}()
@@ -43,18 +47,20 @@ func ReadersToLines(inputHandles <-chan InputHandle) <-chan *Line {
 		defer close(ch)
 		var wg sync.WaitGroup
 
-		for handle := range inputHandles {
-
+		for i := 0; i < Workers; i++ {
 			wg.Add(1)
-			go func(handle InputHandle) {
+			go func(handles <-chan InputHandle) {
 				defer wg.Done()
-				sc := bufio.NewScanner(handle.Reader)
-				sc.Buffer(make([]byte, BuffSize), BuffSize)
-				sc.Split(bufio.ScanLines)
-				for i := 1; sc.Scan(); i++ {
-					ch <- &Line{Location: &Location{File: handle.File, Line: i}, Content: sc.Text()}
+				for handle := range handles {
+					sc := bufio.NewScanner(handle.Reader)
+					sc.Buffer(make([]byte, BuffSize), BuffSize)
+					sc.Split(bufio.ScanLines)
+					for i := 1; sc.Scan(); i++ {
+						ch <- &Line{Location: &Location{File: handle.File, Line: i}, Content: sc.Text()}
+					}
+					handle.close()
 				}
-			}(handle)
+			}(inputHandles)
 		}
 		wg.Wait()
 	}()
