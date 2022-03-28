@@ -6,6 +6,7 @@ var (
 	Client  http.Client
 	Debug   *bool
 	loaders []func()
+	Workers *int
 )
 
 func LoadApiPatterns() {

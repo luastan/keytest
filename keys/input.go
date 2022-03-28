@@ -2,6 +2,7 @@ package keys
 
 import (
 	"bufio"
+	"github.com/luastan/keytest/kt"
 	"github.com/luastan/keytest/logger"
 	"io/fs"
 	"os"
@@ -10,7 +11,6 @@ import (
 )
 
 const BuffSize = 512 * 1024
-const Workers = 100
 
 func PathsToInputHandles(paths <-chan string) <-chan InputHandle {
 	ch := make(chan InputHandle, 1)
@@ -47,7 +47,7 @@ func ReadersToLines(inputHandles <-chan InputHandle) <-chan *Line {
 		defer close(ch)
 		var wg sync.WaitGroup
 
-		for i := 0; i < Workers; i++ {
+		for i := 0; i < *kt.Workers; i++ {
 			wg.Add(1)
 			go func(handles <-chan InputHandle) {
 				defer wg.Done()
