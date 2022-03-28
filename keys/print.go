@@ -30,14 +30,12 @@ func LogResults(wg *sync.WaitGroup, results <-chan FoundAPIKey, silent bool) {
 	}()
 }
 
-const consoleVulnerableTemplate = `[+] {{ .FoundAPIKey.KeyType.Name }} - {{ .FoundAPIKey.Key }} {{ $fk := .FoundAPIKey }}
-{{ range $endpoint := .VulnerableEndpoints }} 
+const consoleVulnerableTemplate = `[+] {{ .FoundAPIKey.KeyType.Name }} - {{ .FoundAPIKey.Key }} {{ $fk := .FoundAPIKey }}{{ range $endpoint := .VulnerableEndpoints }} 
   - {{ .Name }}
-  - Price: {{ .Pricing }}
+  - Impact: {{ .Pricing }}
+  - Location: {{ $fk.Location.File }}:{{ $fk.Location.Line }}
   - POC: {{ .Check.Poc $fk $endpoint }}
-{{end}}
-
-`
+{{end}}`
 
 const markdownVulnerablesTemplate = `{{ range . }}{{ $fk := .FoundAPIKey }}
 - **{{ $fk.KeyType.Name }}**
@@ -46,7 +44,7 @@ const markdownVulnerablesTemplate = `{{ range . }}{{ $fk := .FoundAPIKey }}
 
 {{ range $endpoint := .VulnerableEndpoints }}
   - **{{ .Name }}:**
-    - **Price:** {{ .Pricing }}
+    - **Impact:** {{ .Pricing }}
     - **POC:**
 ` + "```" + `
 {{ .Check.Poc $fk $endpoint }}
