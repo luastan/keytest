@@ -37,7 +37,7 @@ func FindEveryKey(line *Line) []FoundAPIKey {
 }
 
 // FindEveryKey returns every key matching the KeyType on that line
-func (kt *KeyType) FindEveryKey(line *Line) []FoundAPIKey {
+func (kt KeyType) FindEveryKey(line *Line) []FoundAPIKey {
 	var found []FoundAPIKey
 	for _, key := range kt.Re.FindAllString(line.Content, -1) {
 		found = append(found, FoundAPIKey{

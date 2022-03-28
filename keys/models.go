@@ -34,7 +34,7 @@ type Line struct {
 
 type FoundAPIKey struct {
 	Key      string
-	KeyType  *KeyType
+	KeyType  KeyType
 	Location *Location
 }
 
