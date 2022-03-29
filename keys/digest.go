@@ -1,6 +1,7 @@
 package keys
 
 import (
+	"github.com/luastan/keytest/kt"
 	"github.com/luastan/keytest/logger"
 	"sync"
 )
@@ -73,17 +74,19 @@ func FindVulns(keys <-chan FoundAPIKey) <-chan KeyVulns {
 	go func() {
 		defer close(ch)
 		var wg sync.WaitGroup
-		for key := range keys {
+		for i := 0; i < *kt.Workers; i++ {
 			wg.Add(1)
-			go func(wg *sync.WaitGroup, key FoundAPIKey) {
-				vulnerableEndpoints, err := key.VulnerableEndpoints()
-				if err != nil {
-					logger.ErrorLogger.Println(err.Error())
-				} else if len(vulnerableEndpoints) > 0 {
-					ch <- KeyVulns{FoundAPIKey: key, VulnerableEndpoints: vulnerableEndpoints}
+			go func(wg *sync.WaitGroup, keys <-chan FoundAPIKey) {
+				for key := range keys {
+					vulnerableEndpoints, err := key.VulnerableEndpoints()
+					if err != nil {
+						logger.ErrorLogger.Println(err.Error())
+					} else if len(vulnerableEndpoints) > 0 {
+						ch <- KeyVulns{FoundAPIKey: key, VulnerableEndpoints: vulnerableEndpoints}
+					}
 				}
 				wg.Done()
-			}(&wg, key)
+			}(&wg, keys)
 		}
 		wg.Wait()
 	}()
