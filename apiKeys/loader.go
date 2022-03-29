@@ -6,5 +6,5 @@ import "github.com/luastan/keytest/keys"
 // list in order to be used.
 func RegisterKeys() {
 	keys.AddKeyTypes(GoogleKeys)
-	keys.AddKeyTypes(HerokuKeys)
+	//keys.AddKeyTypes(HerokuKeys)
 }
