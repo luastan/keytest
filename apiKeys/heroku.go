@@ -8,10 +8,6 @@ import (
 	"regexp"
 )
 
-func AddHerokuKeys() {
-	keys.AddKeyTypes(HerokuKeys)
-}
-
 var (
 	HerokuKeys = []keys.KeyType{
 		{

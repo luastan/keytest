@@ -9,10 +9,6 @@ import (
 	"strings"
 )
 
-func AddGoogleKeys() {
-	keys.AddKeyTypes(GoogleKeys)
-}
-
 var (
 
 	// Defining it here since it can work with different keys

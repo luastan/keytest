@@ -75,7 +75,6 @@ func init() {
 
 	// Register API key patterns
 
-	kt.RegisterLoader(apiKeys.AddGoogleKeys)
-	kt.RegisterLoader(apiKeys.AddHerokuKeys)
+	kt.RegisterLoader(apiKeys.RegisterKeys)
 	kt.LoadApiPatterns()
 }
